@@ -2,7 +2,6 @@
     "version": 2,
     "name": "mylinebot",
     "builds": [{ "src": "server.js", "use": "@now/node" }],
-    "alias": "mylinebot-qikta.now.sh",
     "env": {
         "CHANNEL_ACCESS_TOKEN": "@line-token",
         "CHANNEL_SECRET": "@line-secret"
