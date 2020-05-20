@@ -15,13 +15,6 @@ app.get('/', (req, res) => res.send('Hello LINE BOT!(GET)')); //ブラウザ確�
 app.post('/webhook', line.middleware(config), (req, res) => {
     console.log(req.body.events);
 
-    //ここのif分はdeveloper consoleの"接続確認"用なので削除して問題ないです。
-    if(req.body.events[0].replyToken === '00000000000000000000000000000000' && req.body.events[1].replyToken === 'ffffffffffffffffffffffffffffffff'){
-        res.send('Hello LINE BOT!(POST)');
-        console.log('疎通確認用');
-        return; 
-    }
-
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result));
@@ -34,9 +27,16 @@ async function handleEvent(event) {
     return Promise.resolve(null);
   }
 
+  let replyText = '';
+  if (evemt.message.text === 'こんにちは'){
+      replyText = 'こんばんはの時間ですよ';
+  } else {
+      replyText = 'うざ';
+  }
+
   return client.replyMessage(event.replyToken, {
     type: 'text',
-    text: event.message.text //実際に返信の言葉を入れる箇所
+    text: replyText
   });
 }
 
