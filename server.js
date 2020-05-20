@@ -42,12 +42,11 @@ async function handleEvent(event) {
 }
 
 const getQiita = async(userId) => {
-    const URL = `http://qiita.com/api/v2/items?page=1&per_page=10`;
-    const res = await axios.get(URL);
+    const res = await axios.get('http://qiita.com/api/v2/items?page=1&per_page=10');
     const item = res.data;
     await client.pushMessage(userId, {
         type: 'text',
-        text: item.description.title,
+        text: item[0].url,
     });
 } 
 
