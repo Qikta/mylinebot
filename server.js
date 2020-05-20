@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const axios = require('axios');
 const line = require('@line/bot-sdk');
 const PORT = process.env.PORT || 3000;
 
@@ -11,7 +12,6 @@ const config = {
 
 const app = express();
 
-app.get('/', (req, res) => res.send('Hello LINE BOT!(GET)')); //ブラウザ確認用(無くても問題ない)
 app.post('/webhook', line.middleware(config), (req, res) => {
     console.log(req.body.events);
 
@@ -28,10 +28,11 @@ async function handleEvent(event) {
   }
 
   let replyText = '';
-  if (event.message.text === 'こんにちは'){
-      replyText = 'こんばんはの時間ですよ';
+  if (event.message.text === 'qiita'){
+    replyText = 'ちょっとまってね'; //待ってねってメッセージだけ先に処理
+    getQiita(event.source.userId); //スクレイピング処理が終わったらプッシュメッセージ
   } else {
-      replyText = 'うざ';
+    replyText = event.message.text;
   }
 
   return client.replyMessage(event.replyToken, {
@@ -39,6 +40,16 @@ async function handleEvent(event) {
     text: replyText
   });
 }
+
+const getQiita = async(userId) => {
+    const URL = `http://qiita.com/api/v2/items?page=1&per_page=10`;
+    const res = await axios.get(URL);
+    const item = res.data;
+    await client.pushMessage(userId, {
+        type: 'text',
+        text: item.description.title,
+    });
+} 
 
 // app.listen(PORT);
 (process.env.NOW_REGION) ? module.exports = app : app.listen(PORT);
