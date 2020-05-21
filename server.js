@@ -43,12 +43,15 @@ async function handleEvent(event) {
 
 const getQiita = async(userId) => {
     const res = await axios.get('http://qiita.com/api/v2/items?page=1&per_page=10');
-    const item = res.data;
-    await client.pushMessage(userId, {
-        type: 'text',
-        text: item[0].url,
+    const article = [];
+    res.data().forEach((doc) => {
+        article.push(doc.url);
     });
-} 
+    return client.pushMessage(userId, {
+        type: 'text',
+        text: article[0],
+    });
+};
 
 // app.listen(PORT);
 (process.env.NOW_REGION) ? module.exports = app : app.listen(PORT);
