@@ -23,7 +23,7 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 
 const client = new line.Client(config);
 
-async function handleEvent(event) {
+function handleEvent(event) {
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
@@ -63,7 +63,7 @@ const getUsers = async(userId) => {
 
   await client.pushMessage(userId, {
     type : 'text',
-    text : `${item}`
+    text : 'aaa'
   });
 }
 
