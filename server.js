@@ -65,7 +65,7 @@ const getUsers = (userId) => {
   //   });
   // });
 
-  await client.pushMessage(userId, message);
+  return client.pushMessage(userId, message);
 }
 
 // app.listen(PORT);
