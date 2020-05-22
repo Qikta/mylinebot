@@ -42,30 +42,29 @@ async function handleEvent(event) {
   });
 }
 
-const getUsers = (userId) => {
-  axios.get('/users')
-  .then((res) => {
-    let messages = [];
-    res.forEach((doc) => {
-      handle = doc.data().handle;
-      birth = doc.data().birthday;
-      messages.push({
-        type : 'text',
-        text : `${handle}さん：${birth}`
-      });
-    });
-    return client.pushMessage(userId, messages);
-  })
-  .catch(err => console.log(err));
-  // let message = [];
-  // res.forEach((doc) => {
-  //   handle = doc.data().handle;
-  //   birth = doc.data().birthday;
-  //   message.push({
-  //     type : 'text',
-  //     text : `${handle}さん：${birth}`
+const getUsers = async(userId) => {
+  // axios.get('/users')
+  // .then((res) => {
+  //   let messages = [];
+  //   res.forEach((doc) => {
+  //     handle = doc.data().handle;
+  //     birth = doc.data().birthday;
+  //     messages.push({
+  //       type : 'text',
+  //       text : `${handle}さん：${birth}`
+  //     });
   //   });
-  // });
+  //   return client.pushMessage(userId, messages);
+  // })
+  // .catch(err => console.log(err));
+  const res = await axios.get('https://asia-northeast1-birthday-api-ee69a.cloudfunctions.net/api/users');
+  const item = res.data();
+  console.log(item);
+
+  await client.pushMessage(userId, {
+    type : 'text',
+    text : `${item}`
+  });
 }
 
 // app.listen(PORT);
