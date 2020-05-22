@@ -4,6 +4,7 @@ const express = require('express');
 // const cron = require('./cron');
 const line = require('@line/bot-sdk');
 const PORT = process.env.PORT || 3000;
+const axios = require('axios');
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
