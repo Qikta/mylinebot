@@ -41,7 +41,7 @@ async function handleEvent(event) {
   });
 }
 
-const getUser = async (userId) => {
+const getUsers = async (userId) => {
   const res = await axios.get('/users');
   const item = res.data;
 
