@@ -42,10 +42,10 @@ async function handleEvent(event) {
 }
 
 const getUsers = async (userId) => {
-  const res = await axios.get('/users');
+  const res = await axios.get('https://asia-northeast1-birthday-api-ee69a.cloudfunctions.net/api/users/');
   const item = res.data;
 
-  return client.pushMessage(userId, {
+  await client.pushMessage(userId, {
     type : 'text',
     text : `${item}`, 
   });
