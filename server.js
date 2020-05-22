@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const axios = require('axios');
+// const cron = require('./cron');
 const line = require('@line/bot-sdk');
 const PORT = process.env.PORT || 3000;
 
@@ -28,9 +28,9 @@ async function handleEvent(event) {
   }
 
   let replyText = '';
-  if (event.message.text === 'qiita'){
+  if (event.message.text === '誕生日'){
     replyText = 'ちょっとまってね'; //待ってねってメッセージだけ先に処理
-    getQiita(event.source.userId); //スクレイピング処理が終わったらプッシュメッセージ
+    getUsers(event.source.userId);
   } else {
     replyText = event.message.text;
   }
@@ -41,17 +41,15 @@ async function handleEvent(event) {
   });
 }
 
-const getQiita = async(userId) => {
-    const res = await axios.get('http://qiita.com/api/v2/items?page=1&per_page=10');
-    const article = [];
-    res.data().forEach((doc) => {
-        article.push(doc.url);
-    });
-    return client.pushMessage(userId, {
-        type: 'text',
-        text: article[0],
-    });
-};
+const getUser = async (userId) => {
+  const res = await axios.get('/users');
+  const item = res.data;
+
+  return client.pushMessage(userId, {
+    type : 'text',
+    text : `${item}`, 
+  });
+}
 
 // app.listen(PORT);
 (process.env.NOW_REGION) ? module.exports = app : app.listen(PORT);
