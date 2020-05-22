@@ -43,8 +43,9 @@ async function handleEvent(event) {
 }
 
 const getUsers = (userId) => {
-  const message = [];
-  axios.get('/users').then((res) => {
+  axios.get('/users')
+  .then((res) => {
+    let message = [];
     res.forEach((doc) => {
       handle = doc.data().handle;
       birth = doc.data().birthday;
@@ -52,9 +53,10 @@ const getUsers = (userId) => {
         type : 'text',
         text : `${handle}さん：${birth}`
       });
-    })
-    .catch(err => console.log(err));
+    });
+    return client.pushMessage(userId, message);
   })
+  .catch(err => console.log(err));
   // let message = [];
   // res.forEach((doc) => {
   //   handle = doc.data().handle;
@@ -64,8 +66,6 @@ const getUsers = (userId) => {
   //     text : `${handle}さん：${birth}`
   //   });
   // });
-
-  return client.pushMessage(userId, message);
 }
 
 // app.listen(PORT);
