@@ -45,16 +45,16 @@ async function handleEvent(event) {
 const getUsers = (userId) => {
   axios.get('/users')
   .then((res) => {
-    let message = [];
+    let messages = [];
     res.forEach((doc) => {
       handle = doc.data().handle;
       birth = doc.data().birthday;
-      message.push({
+      messages.push({
         type : 'text',
         text : `${handle}さん：${birth}`
       });
     });
-    return client.pushMessage(userId, message);
+    return client.pushMessage(userId, messages);
   })
   .catch(err => console.log(err));
   // let message = [];
