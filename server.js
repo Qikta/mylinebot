@@ -43,8 +43,8 @@ async function handleEvent(event) {
 }
 
 const getUsers = (userId) => {
+  const message = [];
   axios.get('/users').then((res) => {
-    let message = [];
     res.forEach((doc) => {
       handle = doc.data().handle;
       birth = doc.data().birthday;
