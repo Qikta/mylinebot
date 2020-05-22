@@ -69,10 +69,7 @@ const getUsers = async(userId) => {
     });
   });
 
-  await client.pushMessage(userId, {
-    type : 'text',
-    text : messages
-  });
+  await client.pushMessage(userId, messages);
 }
 
 // app.listen(PORT);
