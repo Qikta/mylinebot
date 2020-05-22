@@ -58,7 +58,7 @@ const getUsers = async(userId) => {
   // })
   // .catch(err => console.log(err));
   const res = await axios.get('https://asia-northeast1-birthday-api-ee69a.cloudfunctions.net/api/users');
-  const item = res.data;
+  const item = res.data();
   let messages = [];
   item.forEach((doc) => {
     const handle = doc.handle;
