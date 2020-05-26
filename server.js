@@ -1,18 +1,14 @@
 'use strict';
 
 const express = require('express');
-const cron = require('node-cron');
 const line = require('@line/bot-sdk');
 const PORT = process.env.PORT || 3000;
 const axios = require('axios');
-const moment = require('moment-timezone');
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
 };
-
-const myId = 'U4f4bab656c77a917dd399292896391ee';
 
 const app = express();
 
@@ -32,44 +28,25 @@ function handleEvent(event) {
   }
 
   let replyText = '';
-  if (event.message.text === '誕生日'){
-    replyText = 'ちょっとまってね'; 
-    getUsers(event.source.userId);
-  } else {
+  const res = await axios.get('https://asia-northeast1-birthday-api-ee69a.cloudfunctions.net/api/users');
+  const item = res.data;
+  item.map((doc) => {
+    const handle = doc.handle;
+    const lastname = doc.lastname;
+    const birth = doc.birthday;
+    if (event.message.text === handle || event.message.text === lastname){
+      replyText = `${handle}の誕生日は${birth}`
+    }
+  });
+
+  if (event.message.text === ''){
     replyText = event.message.text;
-  }
+  } 
 
   return client.replyMessage(event.replyToken, {
     type: 'text',
     text: replyText
   });
-}
-
-cron.schedule('*/1 * * * *', () => {
-  let today = new Date();
-  let month = today.getMonth() + 1;
-  let day = today.getDate() + 1;
-  client.pushMessage(myId, {
-    type: "text",
-    text: `${month}-${day}`
-  })
-  console.log(moment().tz("Asia/Tokyo").format() + ' 送信完了：push message');
-})
-
-const getUsers = async(userId) => {
-  const res = await axios.get('https://asia-northeast1-birthday-api-ee69a.cloudfunctions.net/api/users');
-  const item = res.data;
-  let messages = [];
-  item.map((doc) => {
-    const handle = doc.handle;
-    const birth = doc.birthday;
-    messages.push({
-      type : 'text',
-      text : `${handle}さん：${birth}`
-    });
-  });
-
-  return client.pushMessage(userId, messages[0]);
 }
 
 // app.listen(PORT);
